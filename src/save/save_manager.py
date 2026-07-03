@@ -12,7 +12,7 @@ class SaveManager:
         os.makedirs(SAVE_DIR, exist_ok=True)
         self._init_db()
 
-    # ── JSON save ─────────────────────────────────────────────────────────────
+    # __ JSON save _____________________________________________________________
     def save(self, player, floor: int, stats, slot: int = 0) -> None:
         data = {
             "floor":  floor,
@@ -41,7 +41,7 @@ class SaveManager:
         if os.path.exists(path):
             os.remove(path)
 
-    # ── SQLite stats ──────────────────────────────────────────────────────────
+    # __ SQLite stats __________________________________________________________
     def _init_db(self) -> None:
         conn = sqlite3.connect(STATS_DB)
         cur  = conn.cursor()
@@ -76,7 +76,7 @@ class SaveManager:
                 INSERT INTO run_stats
                   (kills, gold, floors, damage_dealt, damage_taken,
                    potions_used, chests_opened, play_time)
-                VALUES (?,?,?,?,?,?,?,?)
+                VALUES (_,_,_,_,_,_,_,_)
             """, (stats.kills, stats.gold, stats.floors,
                   stats.damage_dealt, stats.damage_taken,
                   stats.potions_used, stats.chests_opened, stats.play_time))
@@ -89,7 +89,7 @@ class SaveManager:
         try:
             conn = sqlite3.connect(STATS_DB)
             cur  = conn.cursor()
-            cur.execute("INSERT OR IGNORE INTO achievements (id) VALUES (?)",
+            cur.execute("INSERT OR IGNORE INTO achievements (id) VALUES (_)",
                         (achievement_id,))
             conn.commit()
             conn.close()

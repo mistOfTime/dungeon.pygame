@@ -41,7 +41,7 @@ class Player(pygame.sprite.Sprite):
         self.bus      = bus
         self.settings = settings
 
-        # ── Visuals ──────────────────────────────────────────────────────────
+        # __ Visuals __________________________________________________________
         self.facing_angle  = 0.0
         self.is_dodging    = False
         self.is_attacking  = False
@@ -51,12 +51,12 @@ class Player(pygame.sprite.Sprite):
         self.hitbox   = pygame.Rect(0, 0, 22, 28)
         self.hitbox.center = self.rect.center
 
-        # ── World position (float precision) ─────────────────────────────────
+        # __ World position (float precision) _________________________________
         self.pos      = pygame.math.Vector2(x, y)
         self.vel      = pygame.math.Vector2(0, 0)
         self.facing   = pygame.math.Vector2(1, 0)
 
-        # ── Base stats ───────────────────────────────────────────────────────
+        # __ Base stats _______________________________________________________
         self.level         = 1
         self.xp            = 0
         self.xp_to_next    = xp_for_level(2)
@@ -67,7 +67,7 @@ class Player(pygame.sprite.Sprite):
         self._base_max_stamina = PLAYER_MAX_STAMINA
         self._base_speed       = PLAYER_SPEED
 
-        # ── Passive upgrades ─────────────────────────────────────────────────
+        # __ Passive upgrades _________________________________________________
         self.upgrades: dict[str, int] = {
             "max_hp":      0,
             "max_mana":    0,
@@ -78,14 +78,14 @@ class Player(pygame.sprite.Sprite):
             "crit":        0,
         }
 
-        # ── Inventory / equipment ─────────────────────────────────────────────
+        # __ Inventory / equipment _____________________________________________
         self.inventory = Inventory()
 
         self.hp       = float(self.max_hp)
         self.mana     = float(self.max_mana)
         self.stamina  = float(self.max_stamina)
 
-        # ── Timers ───────────────────────────────────────────────────────────
+        # __ Timers ___________________________________________________________
         self._dodge_timer    = Timer(DODGE_DURATION)
         self._dodge_cd       = Timer(DODGE_COOLDOWN)
         self._iframe_timer   = Timer(DODGE_IFRAMES)
@@ -93,7 +93,7 @@ class Player(pygame.sprite.Sprite):
         self._combo_timer    = Timer(COMBO_WINDOW)
         self._hit_flash      = Timer(0.1)
 
-        # ── State flags ──────────────────────────────────────────────────────
+        # __ State flags ______________________________________________________
         self.is_dodging    = False
         self.is_sprinting  = False
         self.is_attacking  = False
@@ -102,16 +102,16 @@ class Player(pygame.sprite.Sprite):
         self.combo_count   = 0
         self.facing_angle  = 0.0
 
-        # ── Combat stats ─────────────────────────────────────────────────────
+        # __ Combat stats _____________________________________________________
         self._base_damage    = 10.0
         self._base_crit      = 0.05
         self._base_crit_mult = CRIT_MULTIPLIER
         self._base_defense   = 0.0
 
-        # ── Game stats ───────────────────────────────────────────────────────
+        # __ Game stats _______________________________________________________
         self.stats     = PlayerStats()
 
-    # ── Computed stats ───────────────────────────────────────────────────────
+    # __ Computed stats _______________________________________________________
     @property
     def equip_stats(self) -> ItemStats:
         return self.inventory.total_stats()
@@ -152,14 +152,14 @@ class Player(pygame.sprite.Sprite):
     def invincible(self) -> bool:
         return not self._iframe_timer.done
 
-    # ── Draw ─────────────────────────────────────────────────────────────────
+    # __ Draw _________________________________________________________________
     def _draw_sprite(self) -> None:
         from src.player.sprites import draw_player
         hit = (hasattr(self, '_hit_flash') and not self._hit_flash.done)
         draw_player(self.image, self.facing_angle,
                     self.is_dodging, self.is_attacking, hit)
 
-    # ── Input handling ───────────────────────────────────────────────────────
+    # __ Input handling _______________________________________________________
     def handle_event(self, event: pygame.Event) -> None:
         kb = self.settings.keybinds
         if event.type == pygame.KEYDOWN:
@@ -172,7 +172,7 @@ class Player(pygame.sprite.Sprite):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             self._try_attack()
 
-    # ── Update ───────────────────────────────────────────────────────────────
+    # __ Update _______________________________________________________________
     def update(self, dt: float, walls: list[pygame.Rect]) -> None:
         if self.is_dead:
             return
@@ -182,7 +182,7 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         kb   = self.settings.keybinds
 
-        # ── Timers ───────────────────────────────────────────────────────────
+        # __ Timers ___________________________________________________________
         self._dodge_timer.update(dt)
         self._dodge_cd.update(dt)
         self._iframe_timer.update(dt)
@@ -193,23 +193,23 @@ class Player(pygame.sprite.Sprite):
         if self._combo_timer.done:
             self.combo_count = 0
 
-        # ── Movement ─────────────────────────────────────────────────────────
+        # __ Movement _________________________________________________________
         if self.is_dodging:
             self._update_dodge(dt, walls)
         else:
             self._update_movement(dt, keys, kb, walls)
 
-        # ── Regen ────────────────────────────────────────────────────────────
+        # __ Regen ____________________________________________________________
         self.stamina = min(self.max_stamina,
                            self.stamina + PLAYER_STAMINA_REGEN * dt)
         mana_regen = PLAYER_MANA_REGEN + self.equip_stats.mana_regen
         self.mana   = min(self.max_mana, self.mana + mana_regen * dt)
 
-        # ── Sync rects ───────────────────────────────────────────────────────
+        # __ Sync rects _______________________________________________________
         self.rect.center     = (int(self.pos.x), int(self.pos.y))
         self.hitbox.center   = self.rect.center
 
-        # ── Facing ───────────────────────────────────────────────────────────
+        # __ Facing ___________________________________________________________
         mx, my = pygame.mouse.get_pos()
         from src.core.camera import Camera
         dx = mx - self.rect.centerx
@@ -218,7 +218,7 @@ class Player(pygame.sprite.Sprite):
             self.facing.x, self.facing.y = normalise(dx, dy)
             self.facing_angle = math.degrees(math.atan2(dy, dx))
 
-        # ── Sprite flash ─────────────────────────────────────────────────────
+        # __ Sprite flash _____________________________________________________
         self._draw_sprite()
         if not self._hit_flash.done:
             flash = pygame.Surface(self.image.get_size(), pygame.SRCALPHA)
@@ -286,7 +286,7 @@ class Player(pygame.sprite.Sprite):
                 self.pos.y = self.hitbox.centery
                 if vel_override is None: self.vel.y = 0
 
-    # ── Actions ──────────────────────────────────────────────────────────────
+    # __ Actions ______________________________________________________________
     def _try_dodge(self) -> None:
         if (not self.is_dodging and self._dodge_cd.done and
                 self.stamina >= DODGE_STAMINA_COST):
@@ -347,7 +347,7 @@ class Player(pygame.sprite.Sprite):
             self.bus.publish("bomb_thrown", {"pos": (self.pos.x, self.pos.y), "damage": dmg})
         self.bus.publish("sfx", {"key": "potion_use"})
 
-    # ── Damage / healing ─────────────────────────────────────────────────────
+    # __ Damage / healing _____________________________________________________
     def take_damage(self, amount: float, knockback_vec: pygame.math.Vector2 | None = None) -> None:
         if self.invincible or self.is_dead:
             return
@@ -372,7 +372,7 @@ class Player(pygame.sprite.Sprite):
             bonus = amount * life_steal
             self.hp = min(self.max_hp, self.hp + bonus)
 
-    # ── XP / levelling ───────────────────────────────────────────────────────
+    # __ XP / levelling _______________________________________________________
     def gain_xp(self, amount: int) -> None:
         self.xp += amount
         while self.xp >= self.xp_to_next:
@@ -390,7 +390,7 @@ class Player(pygame.sprite.Sprite):
         self.stats.gold += amount
         self.bus.publish("gold_pickup", {"amount": amount})
 
-    # ── Serialisation ────────────────────────────────────────────────────────
+    # __ Serialisation ________________________________________________________
     def to_dict(self) -> dict:
         return {
             "level":       self.level,

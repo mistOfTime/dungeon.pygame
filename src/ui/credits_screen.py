@@ -10,38 +10,38 @@ ECLIPSE DEPTHS
 
 A Roguelike Dungeon Crawler
 
-━━━━━━━━━━━━━━━━━━━━━
+_____________________
 CREATED BY
-━━━━━━━━━━━━━━━━━━━━━
+_____________________
   mistOfTime
 
-━━━━━━━━━━━━━━━━━━━━━
+_____________________
 DEVELOPMENT
-━━━━━━━━━━━━━━━━━━━━━
+_____________________
 Programming & Design
   Eclipse Depths Team
 
-━━━━━━━━━━━━━━━━━━━━━
+_____________________
 TECHNOLOGY
-━━━━━━━━━━━━━━━━━━━━━
+_____________________
 Python 3.13+
 Pygame Community Edition
 Custom Particle Engine
 A* Pathfinding
 
-━━━━━━━━━━━━━━━━━━━━━
+_____________________
 ASSETS
-━━━━━━━━━━━━━━━━━━━━━
-Art  – Kenney.nl / CraftPix / itch.io
-Audio – Kenney Audio / Freesound
+_____________________
+Art  _ Kenney.nl / CraftPix / itch.io
+Audio _ Kenney Audio / Freesound
 
-━━━━━━━━━━━━━━━━━━━━━
+_____________________
 SPECIAL THANKS
-━━━━━━━━━━━━━━━━━━━━━
+_____________________
 The Pygame Community
 All open-source contributors
 
-━━━━━━━━━━━━━━━━━━━━━
+_____________________
 
 Thank you for playing!
 """
@@ -76,7 +76,7 @@ class CreditsScreen:
             if not line.strip():
                 y += 14
                 continue
-            col = (200, 170, 255) if line.startswith("━") else (
+            col = (200, 170, 255) if line.startswith("_") else (
                   (255, 215, 0)  if line.isupper() and len(line) > 4 else
                   (180, 180, 200))
             txt = self._font.render(line, True, col)

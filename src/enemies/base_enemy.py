@@ -111,7 +111,7 @@ class BaseEnemy(pygame.sprite.Sprite):
         pygame.draw.circle(self.image, (255, 60, 60), (w//2 - 4, h//4 - 1), 2)
         pygame.draw.circle(self.image, (255, 60, 60), (w//2 + 4, h//4 - 1), 2)
 
-    # ── Update ───────────────────────────────────────────────────────────────
+    # __ Update _______________________________________________________________
     def update(self, dt: float, player, walls: list[pygame.Rect],
                dungeon_gen, projectiles) -> None:
         if not self.alive:
@@ -174,7 +174,7 @@ class BaseEnemy(pygame.sprite.Sprite):
         elif self.state == EnemyState.CHASE:
             self.state = EnemyState.PATROL
 
-    # ── Behaviours ───────────────────────────────────────────────────────────
+    # __ Behaviours ___________________________________________________________
     def _behaviour_idle(self, dt) -> pygame.math.Vector2:
         if self._state_timer.done:
             self.state = EnemyState.PATROL
@@ -236,7 +236,7 @@ class BaseEnemy(pygame.sprite.Sprite):
             return pygame.math.Vector2(random.uniform(-1,1), random.uniform(-1,1)) * self.speed
         return pygame.math.Vector2(dx/d, dy/d) * (self.speed * 0.7)
 
-    # ── Movement ─────────────────────────────────────────────────────────────
+    # __ Movement _____________________________________________________________
     def _move(self, dt: float, vel: pygame.math.Vector2, walls: list[pygame.Rect]) -> None:
         self.pos.x += vel.x * dt
         self.hitbox.centerx = int(self.pos.x)
@@ -259,7 +259,7 @@ class BaseEnemy(pygame.sprite.Sprite):
         self.rect.center = (int(self.pos.x), int(self.pos.y))
         self.hitbox.center = self.rect.center
 
-    # ── Damage ───────────────────────────────────────────────────────────────
+    # __ Damage _______________________________________________________________
     def take_damage(self, amount: float,
                     knockback_vec: pygame.math.Vector2 | None = None) -> None:
         if not self.alive:

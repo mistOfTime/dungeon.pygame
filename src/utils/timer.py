@@ -35,7 +35,7 @@ class Timer:
 
     @property
     def progress(self) -> float:
-        """0.0 → 1.0"""
+        """0.0 _ 1.0"""
         return min(1.0, self._elapsed / self.duration) if self.duration else 1.0
 
     @property

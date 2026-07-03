@@ -3,14 +3,14 @@
 
 import pygame
 
-# ── Window ──────────────────────────────────────────────────────────────────
+# __ Window __________________________________________________________________
 WINDOW_TITLE   = "Eclipse Depths"
 SCREEN_WIDTH   = 1280
 SCREEN_HEIGHT  = 720
 TARGET_FPS     = 60
 TILE_SIZE      = 32
 
-# ── Colours ──────────────────────────────────────────────────────────────────
+# __ Colours __________________________________________________________________
 BLACK        = (0,   0,   0)
 WHITE        = (255, 255, 255)
 RED          = (220, 50,  50)
@@ -29,7 +29,7 @@ DARK_BLUE    = (20,  30,  80)
 DARK_GREEN   = (20,  80,  30)
 TRANSPARENT  = (0,   0,   0,  0)
 
-# ── Rarity colours ───────────────────────────────────────────────────────────
+# __ Rarity colours ___________________________________________________________
 RARITY_COLOURS = {
     "Common":    (180, 180, 180),
     "Uncommon":  (30,  200, 80),
@@ -39,7 +39,7 @@ RARITY_COLOURS = {
     "Mythic":    (220, 50,  80),
 }
 
-# ── Player defaults ──────────────────────────────────────────────────────────
+# __ Player defaults __________________________________________________________
 PLAYER_SPEED         = 200          # px/s
 PLAYER_SPRINT_MULT   = 1.6
 PLAYER_ACCEL         = 1800
@@ -56,12 +56,12 @@ DODGE_COOLDOWN       = 1.0
 SPRINT_STAMINA_COST  = 20           # per second
 DODGE_STAMINA_COST   = 25
 
-# ── Combat ───────────────────────────────────────────────────────────────────
+# __ Combat ___________________________________________________________________
 CRIT_MULTIPLIER      = 2.0
 COMBO_WINDOW         = 0.6          # seconds between combo hits
 KNOCKBACK_FRICTION   = 800
 
-# ── Dungeon generation ───────────────────────────────────────────────────────
+# __ Dungeon generation _______________________________________________________
 DUNGEON_MIN_ROOMS    = 10
 DUNGEON_MAX_ROOMS    = 18
 ROOM_MIN_W           = 12           # in tiles
@@ -70,14 +70,14 @@ ROOM_MIN_H           = 10
 ROOM_MAX_H           = 18
 CORRIDOR_WIDTH       = 3
 
-# ── Camera ───────────────────────────────────────────────────────────────────
+# __ Camera ___________________________________________________________________
 CAMERA_SMOOTHING     = 8.0          # higher = snappier
 CAMERA_SHAKE_DECAY   = 5.0
 
-# ── Particle ─────────────────────────────────────────────────────────────────
+# __ Particle _________________________________________________________________
 MAX_PARTICLES        = 600
 
-# ── Layers / draw order ──────────────────────────────────────────────────────
+# __ Layers / draw order ______________________________________________________
 LAYER_FLOOR          = 0
 LAYER_SHADOW         = 1
 LAYER_OBJECT         = 2
@@ -86,7 +86,7 @@ LAYER_PROJECTILE     = 4
 LAYER_EFFECT         = 5
 LAYER_UI             = 6
 
-# ── Game states ──────────────────────────────────────────────────────────────
+# __ Game states ______________________________________________________________
 STATE_MAIN_MENU      = "main_menu"
 STATE_PLAYING        = "playing"
 STATE_PAUSED         = "paused"
@@ -98,7 +98,7 @@ STATE_SETTINGS       = "settings"
 STATE_CREDITS        = "credits"
 STATE_LOADING        = "loading"
 
-# ── Directions ───────────────────────────────────────────────────────────────
+# __ Directions _______________________________________________________________
 DIR_N  = (0,  -1)
 DIR_S  = (0,   1)
 DIR_E  = (1,   0)
@@ -109,22 +109,22 @@ DIR_SE = (1,   1)
 DIR_SW = (-1,  1)
 DIRECTIONS_8 = [DIR_N, DIR_S, DIR_E, DIR_W, DIR_NE, DIR_NW, DIR_SE, DIR_SW]
 
-# ── Audio ─────────────────────────────────────────────────────────────────────
+# __ Audio _____________________________________________________________________
 MUSIC_VOLUME_DEFAULT  = 0.7
 SFX_VOLUME_DEFAULT    = 0.8
 AUDIO_CHANNELS        = 32
 
-# ── Save ─────────────────────────────────────────────────────────────────────
+# __ Save _____________________________________________________________________
 SAVE_DIR             = "saves"
 SAVE_FILENAME        = "save_slot_{slot}.json"
 STATS_DB             = "saves/stats.db"
 
-# ── XP curve ─────────────────────────────────────────────────────────────────
+# __ XP curve _________________________________________________________________
 def xp_for_level(level: int) -> int:
     """XP required to reach *level* from *level-1*."""
     return int(100 * (level ** 1.5))
 
-# ── Floor difficulty scaling ─────────────────────────────────────────────────
+# __ Floor difficulty scaling _________________________________________________
 def enemy_hp_scale(floor: int) -> float:
     return 1.0 + (floor - 1) * 0.18
 

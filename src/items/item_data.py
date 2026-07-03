@@ -47,7 +47,7 @@ class Item:
     id:          str
     name:        str
     item_type:   str          # weapon / armor / ring / necklace / consumable / material / spell
-    subtype:     str = ""     # sword / bow / helmet / chest …
+    subtype:     str = ""     # sword / bow / helmet / chest _
     rarity:      str = "Common"
     description: str = ""
     value:       int = 10
@@ -64,7 +64,7 @@ class Item:
         return RARITY_COLOURS.get(self.rarity, (180, 180, 180))
 
 
-# ── Base item templates ───────────────────────────────────────────────────────
+# __ Base item templates _______________________________________________________
 WEAPON_TEMPLATES = [
     dict(id="sword",    name="Sword",      subtype="sword",    sprite_key="sword",
          stats=ItemStats(damage=18, attack_speed=1.0, crit_chance=0.08, knockback=5)),

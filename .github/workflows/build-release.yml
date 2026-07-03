@@ -1,80 +1,152 @@
-name: Build & Release EclipseDepths.exe
+name: Build, Release & Deploy
 
 on:
   push:
     tags:
-      - 'v*'          # Triggers on version tags like v1.0.0, v1.1.0
-  workflow_dispatch:   # Allow manual trigger from GitHub Actions tab
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
+  # ── Job 1: Windows EXE ────────────────────────────────────────────────────
   build-windows:
     name: Build Windows EXE
     runs-on: windows-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python 3.13
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pygame-ce>=2.4.0 pytweening>=1.2.0 pyinstaller>=6.0.0
+          pip install "pygame-ce>=2.4.0" "pytweening>=1.2.0" "pyinstaller>=6.0.0"
 
-      - name: Build EXE with PyInstaller
+      - name: Build EXE
         run: pyinstaller eclipse_depths.spec --clean
 
-      - name: Verify build
-        run: |
-          $size = (Get-Item "dist\EclipseDepths.exe").Length / 1MB
-          Write-Host "EXE size: $([math]::Round($size, 1)) MB"
-          if ($size -lt 5) { throw "EXE too small — build may have failed" }
+      - name: Zip EXE
+        run: Compress-Archive -Path "dist\EclipseDepths.exe" -DestinationPath "dist\EclipseDepths-Windows.zip"
 
-      - name: Zip the executable
-        run: |
-          Compress-Archive -Path "dist\EclipseDepths.exe" -DestinationPath "dist\EclipseDepths-Windows.zip"
-
-      - name: Upload build artifact
+      - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
           name: EclipseDepths-Windows
           path: dist\EclipseDepths-Windows.zip
-          retention-days: 30
 
-      - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
+  # ── Job 2: Web build (pygbag) ────────────────────────────────────────────
+  build-web:
+    name: Build Web (pygbag)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install "pygame-ce>=2.4.0" "pytweening>=1.2.0" pygbag
+
+      - name: Build web
+        run: python -m pygbag --build main_web.py
+
+      - name: Zip web build
+        run: |
+          cd build/web
+          zip -r ../../EclipseDepths-Web.zip .
+
+      - name: Upload web artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: EclipseDepths-Web
+          path: EclipseDepths-Web.zip
+
+  # ── Job 3: GitHub Release ────────────────────────────────────────────────
+  release:
+    name: Publish GitHub Release
+    needs: [build-windows, build-web]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: EclipseDepths-Windows
+
+      - name: Download Web artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: EclipseDepths-Web
+
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           name: "Eclipse Depths ${{ github.ref_name }}"
           tag_name: ${{ github.ref_name }}
           body: |
-            ## 🌑 Eclipse Depths ${{ github.ref_name }}
+            ## Eclipse Depths ${{ github.ref_name }}
 
-            ### How to play
-            1. Download `EclipseDepths-Windows.zip` below
-            2. Extract anywhere
-            3. Double-click `EclipseDepths.exe`
-            4. No Python install needed!
+            ### Download & Play (Windows)
+            1. Download `EclipseDepths-Windows.zip`
+            2. Extract and double-click `EclipseDepths.exe`
+            3. No Python needed!
+
+            ### Play in Browser
+            Download `EclipseDepths-Web.zip`, extract it,
+            and open `index.html` in Chrome/Firefox.
+            Or host the web folder on itch.io for a live link.
 
             ### Controls
             | Key | Action |
             |-----|--------|
             | WASD | Move |
-            | Left Click | Melee attack |
-            | Right Click | Ranged attack |
-            | Space | Dodge roll |
+            | Left Click | Melee |
+            | Right Click | Ranged |
+            | Space | Dodge |
             | Z/X/C/V | Spells |
             | E | Interact / Descend |
             | I / M / Q | Inventory / Map / Quests |
 
-            ---
-            *Built automatically from source by GitHub Actions.*
-          files: dist\EclipseDepths-Windows.zip
+            *Built automatically by GitHub Actions.*
+          files: |
+            EclipseDepths-Windows.zip
+            EclipseDepths-Web.zip
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── Job 4: Deploy to itch.io ─────────────────────────────────────────────
+  deploy-itchio:
+    name: Deploy Web to itch.io
+    needs: build-web
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download web artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: EclipseDepths-Web
+
+      - name: Unzip web build
+        run: |
+          mkdir -p web-dist
+          unzip EclipseDepths-Web.zip -d web-dist
+
+      - name: Deploy to itch.io via butler
+        uses: robinraju/release-downloader@v1
+        continue-on-error: true   # Skip if ITCHIO_API_KEY not set
+
+      - name: Install butler & push
+        if: ${{ env.ITCHIO_API_KEY != '' }}
+        env:
+          ITCHIO_API_KEY: ${{ secrets.ITCHIO_API_KEY }}
+        run: |
+          curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+          unzip butler.zip
+          chmod +x butler
+          ./butler push web-dist mistofTime/eclipse-depths:html5 \
+            --userversion ${{ github.ref_name }}

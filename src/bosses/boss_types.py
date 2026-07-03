@@ -177,7 +177,7 @@ class AbyssMage(BaseBoss):
         self.bus.publish("sfx", {"key": "spell_lightning"})
 
 
-# ── Factory ──────────────────────────────────────────────────────────────────
+# __ Factory __________________________________________________________________
 BOSS_BY_FLOOR: dict[int, type] = {
     1: SkeletonKing,
     2: FireDragon,

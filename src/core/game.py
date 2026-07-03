@@ -60,7 +60,7 @@ class Game:
         self._register_bus_events()
         self.audio.play_music("menu")
 
-    # ── Display ──────────────────────────────────────────────────────────────
+    # __ Display ______________________________________________________________
     def _apply_display_settings(self) -> None:
         flags = pygame.DOUBLEBUF
         if self.settings.get("fullscreen"):
@@ -69,7 +69,7 @@ class Game:
         h = self.settings.get("resolution_h", SCREEN_HEIGHT)
         self.screen = pygame.display.set_mode((w, h), flags, vsync=int(self.settings.get("vsync", True)))
 
-    # ── Event bus wiring ─────────────────────────────────────────────────────
+    # __ Event bus wiring _____________________________________________________
     def _register_bus_events(self) -> None:
         b = self.bus
         b.subscribe("new_game",         self._on_new_game)
@@ -93,7 +93,7 @@ class Game:
         b.subscribe("apply_settings",   self._on_apply_settings)
         b.subscribe("next_floor",       self._on_next_floor)
 
-    # ── Bus handlers ─────────────────────────────────────────────────────────
+    # __ Bus handlers _________________________________________________________
     def _on_new_game(self, data=None) -> None:
         slot = data.get("slot", 0) if data else 0
         self._start_world(slot, new=True)
@@ -154,7 +154,7 @@ class Game:
     def _on_quit(self, data=None) -> None:
         self.running = False
 
-    # ── Main loop ────────────────────────────────────────────────────────────
+    # __ Main loop ____________________________________________________________
     def run(self) -> None:
         while self.running:
             self.dt = min(self.clock.tick(self.settings.get("fps_limit", TARGET_FPS)) / 1000.0, 0.05)

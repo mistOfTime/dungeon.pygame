@@ -176,7 +176,7 @@ def draw_ancient_golem(surface: pygame.Surface, t: float = 0,
     # Legs
     pygame.draw.rect(surface, stone, (w // 2 - 12, h - 22, 9, 14), border_radius=3)
     pygame.draw.rect(surface, stone, (w // 2 + 3, h - 22, 9, 14), border_radius=3)
-    # Body — large block
+    # Body _ large block
     pygame.draw.rect(surface, stone, (w // 2 - 15, h // 3 + 4, 30, h // 2 - 4), border_radius=4)
     pygame.draw.rect(surface, dark_stone, (w // 2 - 15, h // 3 + 4, 30, h // 2 - 4), 2, border_radius=4)
     # Body highlight
@@ -334,7 +334,7 @@ def draw_abyss_mage(surface: pygame.Surface, t: float = 0,
     # Void mask (face is partially hidden)
     pygame.draw.ellipse(surface, (10, 5, 20, 200),
                         (w // 2 - 7, h // 4 - 3, 14, 10))
-    # Glowing eyes — multiple for void look
+    # Glowing eyes _ multiple for void look
     for ex, ey in [(-3, 0), (3, 0)]:
         pygame.draw.circle(surface, (0, 0, 0), (w // 2 + ex, h // 4 + ey), 3)
         pygame.draw.circle(surface, glow_col, (w // 2 + ex, h // 4 + ey), 2)

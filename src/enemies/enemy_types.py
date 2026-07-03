@@ -168,7 +168,7 @@ class DarkKnight(BaseEnemy):
         draw_dark_knight(self.image, t, hit)
 
 
-# ── Factory ──────────────────────────────────────────────────────────────────
+# __ Factory __________________________________________________________________
 ENEMY_CLASSES = {
     "slime":        Slime,
     "goblin":       Goblin,

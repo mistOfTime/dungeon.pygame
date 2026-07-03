@@ -23,7 +23,7 @@ class Camera:
         self.zoom      = 1.0
         self._zoom_target = 1.0
 
-    # ── Public API ─────────────────────────────────────────────────────────
+    # __ Public API _________________________________________________________
     def follow(self, entity) -> None:
         """Set the entity whose centre the camera should track."""
         self._target_x = entity.rect.centerx - self.screen_w / 2

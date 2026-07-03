@@ -7,7 +7,7 @@ import math
 from src.core.constants import TILE_SIZE
 from src.dungeon.dungeon_generator import Tile
 
-# ── Colour palette ────────────────────────────────────────────────────────────
+# __ Colour palette ____________________________________________________________
 VOID_COL      = (4,   3,   8)
 
 # Floor: dark stone slabs with mortar lines
@@ -55,7 +55,7 @@ class DungeonRenderer:
         self._init_fog()
         self._build_surface()
 
-    # ── Fog ──────────────────────────────────────────────────────────────────
+    # __ Fog __________________________________________________________________
     def _init_fog(self) -> None:
         g = self._gen
         self._fog = [[0] * g.grid_w for _ in range(g.grid_h)]
@@ -76,7 +76,7 @@ class DungeonRenderer:
                     if dr * dr + dc * dc <= r2:
                         self._fog[r][c] = 2
 
-    # ── Surface build ─────────────────────────────────────────────────────────
+    # __ Surface build _________________________________________________________
     def _build_surface(self) -> None:
         g   = self._gen
         w   = g.grid_w * TILE_SIZE
@@ -112,7 +112,7 @@ class DungeonRenderer:
 
         self._tile_surface = surf
 
-    # ── Tile draw helpers ─────────────────────────────────────────────────────
+    # __ Tile draw helpers _____________________________________________________
     def _draw_void(self, surf, px, py) -> None:
         pygame.draw.rect(surf, VOID_COL, (px, py, TILE_SIZE, TILE_SIZE))
 
@@ -127,7 +127,7 @@ class DungeonRenderer:
         )
         pygame.draw.rect(surf, base, (px, py, TILE_SIZE, TILE_SIZE))
 
-        # Stone slab pattern: divide tile into 2×2 sub-slabs with mortar lines
+        # Stone slab pattern: divide tile into 2_2 sub-slabs with mortar lines
         half = TILE_SIZE // 2
         # Subtle alternating shade for slab halves
         offset = (col + row) % 2
@@ -252,7 +252,7 @@ class DungeonRenderer:
         # Determine orientation
         horiz = (self._adj_wall(g, col, row - 1) or self._adj_wall(g, col, row + 1))
         if horiz:
-            # Horizontal door (wall above/below) — draw as arch
+            # Horizontal door (wall above/below) _ draw as arch
             pygame.draw.rect(surf, DOOR_WOOD,    (px + 2, py + 4, TILE_SIZE - 4, TILE_SIZE - 8))
             pygame.draw.rect(surf, DOOR_IRON,    (px + 2, py + 4, TILE_SIZE - 4, 5))
             pygame.draw.rect(surf, DOOR_TRIM,    (px + 2, py + 4, TILE_SIZE - 4, TILE_SIZE - 8), 1)
@@ -291,7 +291,7 @@ class DungeonRenderer:
         pygame.draw.circle(surf, (80, 120, 200), (cx, cy), 8)
         pygame.draw.circle(surf, (140, 180, 255), (cx, cy), 4)
 
-    # ── Torch system ─────────────────────────────────────────────────────────
+    # __ Torch system _________________________________________________________
     def _place_torches(self, g) -> None:
         """Place torch glows at wall tiles that border floor."""
         rng = self._rng
@@ -318,7 +318,7 @@ class DungeonRenderer:
         pygame.draw.circle(surf, (255, 200, 80), (cx, cy - 4), 2)
         pygame.draw.circle(surf, (255, 240, 180), (cx, cy - 4), 1)
 
-    # ── Adjacency helpers ─────────────────────────────────────────────────────
+    # __ Adjacency helpers _____________________________________________________
     def _adj_floor(self, g, col: int, row: int) -> bool:
         if 0 <= row < g.grid_h and 0 <= col < g.grid_w:
             return g.tiles[row][col] in (Tile.FLOOR, Tile.DOOR,
@@ -331,7 +331,7 @@ class DungeonRenderer:
             return g.tiles[row][col] == Tile.WALL
         return False
 
-    # ── Draw (camera-culled) ──────────────────────────────────────────────────
+    # __ Draw (camera-culled) __________________________________________________
     def draw(self, surface: pygame.Surface, camera) -> None:
         if self._tile_surface is None:
             return

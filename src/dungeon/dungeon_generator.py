@@ -43,7 +43,7 @@ class DungeonGenerator:
         self._build_walls()
         return self
 
-    # ── Room placement ────────────────────────────────────────────────────────
+    # __ Room placement ________________________________________________________
     def _place_rooms(self, target: int) -> None:
         grid_cols = 100
         grid_rows = 80
@@ -112,7 +112,7 @@ class DungeonGenerator:
                 a.connected.append(b)
                 b.connected.append(a)
 
-    # ── Type assignment ───────────────────────────────────────────────────────
+    # __ Type assignment _______________________________________________________
     def _assign_types(self) -> None:
         if not self.rooms:
             return
@@ -144,7 +144,7 @@ class DungeonGenerator:
         self.boss_room = next((r for r in self.rooms if r.room_type == "boss"), self.rooms[-1])
         self.exit_room = next((r for r in self.rooms if r.room_type == "exit"), self.rooms[-2] if len(self.rooms) > 1 else self.rooms[0])
 
-    # ── Tile grid ─────────────────────────────────────────────────────────────
+    # __ Tile grid _____________________________________________________________
     def _build_tile_grid(self) -> None:
         self.tiles = [[Tile.VOID] * self.grid_w for _ in range(self.grid_h)]
         for room in self.rooms:
@@ -168,7 +168,7 @@ class DungeonGenerator:
             if 0 <= er < self.grid_h and 0 <= ec < self.grid_w:
                 self.tiles[er][ec] = Tile.EXIT
 
-    # ── Corridors ─────────────────────────────────────────────────────────────
+    # __ Corridors _____________________________________________________________
     def _carve_corridors(self) -> None:
         carved: set[tuple] = set()
         for room in self.rooms:
@@ -202,7 +202,7 @@ class DungeonGenerator:
                     elif self.tiles[y][c] == Tile.WALL:
                         self.tiles[y][c] = Tile.DOOR
 
-    # ── Wall rects ────────────────────────────────────────────────────────────
+    # __ Wall rects ____________________________________________________________
     def _build_walls(self) -> None:
         self.walls = []
         for row in range(self.grid_h):
@@ -211,7 +211,7 @@ class DungeonGenerator:
                     self.walls.append(pygame.Rect(
                         col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
-    # ── Helpers ───────────────────────────────────────────────────────────────
+    # __ Helpers _______________________________________________________________
     def is_passable(self, col: int, row: int) -> bool:
         if 0 <= row < self.grid_h and 0 <= col < self.grid_w:
             return self.tiles[row][col] not in (Tile.WALL, Tile.VOID)

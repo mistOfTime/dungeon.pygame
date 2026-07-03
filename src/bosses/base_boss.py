@@ -28,7 +28,7 @@ class BaseBoss(BaseEnemy):
         bus.publish("sfx", {"key": "boss_intro"})
 
     def update(self, dt, player, walls, dungeon_gen, projectiles):
-        # Intro phase – boss stands still
+        # Intro phase _ boss stands still
         self._intro_timer.update(dt)
         if self._is_in_intro:
             if self._intro_timer.done:

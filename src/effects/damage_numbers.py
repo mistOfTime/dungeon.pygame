@@ -51,7 +51,7 @@ class DamageNumberManager:
 
     def add(self, x: float, y: float, value: int,
             colour: tuple = (255, 220, 80), is_crit: bool = False) -> None:
-        text = str(value) if not is_crit else f"★{value}"
+        text = str(value) if not is_crit else f"_{value}"
         font = self._font_crit if is_crit else self._font_normal
         self._numbers.append(DamageNumber(x, y, text, colour, font, is_crit))
 

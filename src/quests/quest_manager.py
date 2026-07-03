@@ -108,7 +108,7 @@ class QuestManager:
             "colour": (255, 215, 0),
         })
 
-    # ── Event handlers ───────────────────────────────────────────────────────
+    # __ Event handlers _______________________________________________________
     def _on_enemy_killed(self, data):
         name = data.get("name", "").lower().replace(" ", "_")
         self._progress("kill_any")

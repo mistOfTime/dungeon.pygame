@@ -137,7 +137,7 @@ class SettingsScreen:
             pygame.draw.rect(self.screen, (50, 45, 70), rect, border_radius=3)
             if on:
                 pygame.draw.rect(self.screen, (100, 80, 180), rect, border_radius=3)
-                tick = self._font.render("✓", True, WHITE)
+                tick = self._font.render("_", True, WHITE)
                 self.screen.blit(tick, (rect.x + 3, rect.y + 2))
             pygame.draw.rect(self.screen, (120, 100, 160), rect, 1, border_radius=3)
             lbl = self._font.render(label, True, WHITE)

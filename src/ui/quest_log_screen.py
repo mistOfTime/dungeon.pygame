@@ -66,7 +66,7 @@ class QuestLogScreen:
                 if py + 10 <= y <= py + ph:
                     done_col = (100, 220, 100) if q.completed else WHITE
                     prog = f"[{q.progress}/{q.target}]"
-                    txt  = self._font.render(f"• {q.title} {prog} – {q.description}", True, done_col)
+                    txt  = self._font.render(f"_ {q.title} {prog} _ {q.description}", True, done_col)
                     self.screen.blit(txt, (px + 20, y))
                     # Progress bar
                     from src.utils.helpers import draw_bar
@@ -76,5 +76,5 @@ class QuestLogScreen:
 
             y += 8
 
-        hint = self._font.render("Q / Esc – Close", True, MID_GREY)
+        hint = self._font.render("Q / Esc _ Close", True, MID_GREY)
         self.screen.blit(hint, (sw//2 - hint.get_width()//2, sh - 22))

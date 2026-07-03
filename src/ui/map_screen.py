@@ -76,5 +76,5 @@ class MapScreen:
         pygame.draw.circle(self.screen, (100, 200, 255), (px, py), 5)
         pygame.draw.circle(self.screen, WHITE, (px, py), 5, 1)
 
-        hint = self._font.render("M / Esc – Close Map", True, MID_GREY)
+        hint = self._font.render("M / Esc _ Close Map", True, MID_GREY)
         self.screen.blit(hint, (sw//2 - hint.get_width()//2, sh - 24))

@@ -25,7 +25,7 @@ from src.utils.helpers import distance
 
 
 class GameWorld:
-    """The active game session – one run from start to death or exit."""
+    """The active game session _ one run from start to death or exit."""
 
     def __init__(self, screen: pygame.Surface, assets, audio, bus,
                  settings, save_data: dict | None, slot: int) -> None:
@@ -70,7 +70,7 @@ class GameWorld:
         # Register bus events
         self._register_events()
 
-    # ── Bus wiring ───────────────────────────────────────────────────────────
+    # __ Bus wiring ___________________________________________________________
     def _register_events(self) -> None:
         b = self.bus
         b.subscribe("player_attack",   self._on_player_attack)
@@ -85,11 +85,11 @@ class GameWorld:
         b.subscribe("boss_killed",     self._on_boss_killed)
         b.subscribe("quest_complete",  self._on_quest_complete)
 
-        # ── Descent confirmation ──────────────────────────────────────────────────
+        # __ Descent confirmation __________________________________________________
         self._show_descend_prompt = False
         self._descend_prompt_timer = 0.0
 
-    # ── Dungeon generation ───────────────────────────────────────────────────
+    # __ Dungeon generation ___________________________________________________
     def _gen_dungeon(self, floor: int) -> None:
         self.dungeon   = DungeonGenerator(floor).generate()
         self.renderer  = DungeonRenderer(self.dungeon, self.assets)
@@ -174,7 +174,7 @@ class GameWorld:
                 chest  = Chest(cx, cy, self.assets, self.bus, floor, rare=False)
                 self.chest_group.add(chest)
 
-    # ── Input ────────────────────────────────────────────────────────────────
+    # __ Input ________________________________________________________________
     def handle_event(self, event: pygame.Event) -> None:
         self.player.handle_event(event)
         kb = self.settings.keybinds
@@ -204,7 +204,7 @@ class GameWorld:
             # Right click = ranged attack if bow equipped
             self._fire_ranged()
 
-    # ── Update ───────────────────────────────────────────────────────────────
+    # __ Update _______________________________________________________________
     def update(self, dt: float) -> None:
         # Player
         self.player.update(dt, self.dungeon.walls)
@@ -344,7 +344,7 @@ class GameWorld:
                 self.player.stats.chests_opened += 1
                 self.bus.publish("chest_opened", None)
                 return
-        # Exit portal — only trigger when close enough AND pressing E
+        # Exit portal _ only trigger when close enough AND pressing E
         if self._near_exit():
             self.next_floor()
             return
@@ -379,7 +379,7 @@ class GameWorld:
             "colour": (255, 215, 0),
         })
 
-    # ── Draw ─────────────────────────────────────────────────────────────────
+    # __ Draw _________________________________________________________________
     def draw(self) -> None:
         self.screen.fill(DARK_GREY)
 
@@ -454,7 +454,7 @@ class GameWorld:
         self.screen.blit(bg,   (bx, by))
         self.screen.blit(text, (bx + 10, by + 5))
 
-    # ── Bus event handlers ───────────────────────────────────────────────────
+    # __ Bus event handlers ___________________________________________________
     def _on_player_attack(self, data: dict) -> None:
         px, py   = data["pos"]
         fx, fy   = data["facing"]

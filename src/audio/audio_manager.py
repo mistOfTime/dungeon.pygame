@@ -24,7 +24,7 @@ class AudioManager:
         self._sfx_vol    = settings.get("sfx_volume",   SFX_VOLUME_DEFAULT)
         pygame.mixer.set_num_channels(32)
 
-    # ── Music ─────────────────────────────────────────────────────────────────
+    # __ Music _________________________________________________________________
     def play_music(self, key: str, loop: int = -1, fade_ms: int = 1500) -> None:
         if key == self._current_track:
             return
@@ -37,7 +37,7 @@ class AudioManager:
                 pygame.mixer.music.play(loop, fade_ms=fade_ms)
                 self._current_track = key
                 return
-        # No file present — silence is fine
+        # No file present _ silence is fine
         pygame.mixer.music.stop()
         self._current_track = key
 
@@ -45,7 +45,7 @@ class AudioManager:
         pygame.mixer.music.fadeout(fade_ms)
         self._current_track = ""
 
-    # ── SFX ──────────────────────────────────────────────────────────────────
+    # __ SFX __________________________________________________________________
     def play_sfx(self, key: str, volume: float | None = None) -> None:
         snd = self._get_sound(key)
         if snd:
@@ -66,7 +66,7 @@ class AudioManager:
             self._sfx_cache[key] = None
         return self._sfx_cache[key]
 
-    # ── Volume ────────────────────────────────────────────────────────────────
+    # __ Volume ________________________________________________________________
     def set_music_volume(self, vol: float) -> None:
         self._music_vol = max(0.0, min(1.0, vol))
         pygame.mixer.music.set_volume(self._music_vol)

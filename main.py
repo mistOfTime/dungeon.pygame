@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Eclipse Depths – main entry point
+Eclipse Depths ? main entry point
 Run with: python main.py
 """
 

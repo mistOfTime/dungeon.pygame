@@ -30,19 +30,19 @@ class Notification:
 
 class HUD:
     """
-    Layout (1280×720 example):
-    ┌─────────────────────────────────────────────────────────────────────┐
-    │ [Floor N  Gold: NNN]                              [Minimap 140×140] │
-    │                                  [Boss bar + name]                  │
-    │                                                                      │
-    │  (notifications centred mid-screen)                                 │
-    │                                                                      │
-    │ HP ████░  22/100     [Combo x3!]         [Hotbar 1 2 3 4]           │
-    │ MP ████░  40/80      [Z][X][C][V] spells                            │
-    │ ST ████░  80/100                                                    │
-    │ XP ████░  Lv 3                                                      │
-    │ [controls hint]                                                      │
-    └─────────────────────────────────────────────────────────────────────┘
+    Layout (1280_720 example):
+    _______________________________________________________________________
+    _ [Floor N  Gold: NNN]                              [Minimap 140_140] _
+    _                                  [Boss bar + name]                  _
+    _                                                                      _
+    _  (notifications centred mid-screen)                                 _
+    _                                                                      _
+    _ HP _____  22/100     [Combo x3!]         [Hotbar 1 2 3 4]           _
+    _ MP _____  40/80      [Z][X][C][V] spells                            _
+    _ ST _____  80/100                                                    _
+    _ XP _____  Lv 3                                                      _
+    _ [controls hint]                                                      _
+    _______________________________________________________________________
     """
 
     MINIMAP_SIZE  = 140
@@ -115,13 +115,13 @@ class HUD:
             if not boss_found and self._boss_hp > 0:
                 self._boss_hp = 0.0
 
-    # ── Draw ─────────────────────────────────────────────────────────────────
+    # __ Draw _________________________________________________________________
     def draw(self) -> None:
         sw = self.screen.get_width()
         sh = self.screen.get_height()
         p  = self.player
 
-        # ── Bottom-left panel background ─────────────────────────────────────
+        # __ Bottom-left panel background _____________________________________
         panel_h = 90
         panel_w = self.BAR_W + 80
         panel   = pygame.Surface((panel_w, panel_h), pygame.SRCALPHA)
@@ -158,16 +158,16 @@ class HUD:
         lv_lbl = self._font_sm.render(f"Lv {p.level}  XP {p.xp}/{p.xp_to_next}", True, GOLD)
         self.screen.blit(lv_lbl, (self.BAR_X, sh - panel_h + panel_h - 20))
 
-        # ── Spell slots (bottom centre-left) ─────────────────────────────────
+        # __ Spell slots (bottom centre-left) _________________________________
         self._draw_spell_slots(sw, sh)
 
-        # ── Hotbar (bottom centre) ────────────────────────────────────────────
+        # __ Hotbar (bottom centre) ____________________________________________
         self._draw_hotbar(sw, sh)
 
-        # ── Combo counter ─────────────────────────────────────────────────────
+        # __ Combo counter _____________________________________________________
         if self._combo_alpha > 0 and self._combo_display > 1:
             alpha = int(clamp(self._combo_alpha / 1.2, 0, 1) * 255)
-            combo_txt = self._font_big.render(f"× {self._combo_display}  COMBO!", True, (255, 200, 50))
+            combo_txt = self._font_big.render(f"_ {self._combo_display}  COMBO!", True, (255, 200, 50))
             combo_txt.set_alpha(alpha)
             scale = 1.0 + (self._combo_alpha / 1.2) * 0.3
             scaled = pygame.transform.scale(
@@ -176,7 +176,7 @@ class HUD:
             self.screen.blit(scaled,
                              (sw // 2 - scaled.get_width() // 2, sh // 2 - 80))
 
-        # ── Boss health bar ───────────────────────────────────────────────────
+        # __ Boss health bar ___________________________________________________
         if self._boss_name and self._boss_hp > 0:
             bw, bh = min(500, sw - 80), 22
             bx     = sw // 2 - bw // 2
@@ -194,7 +194,7 @@ class HUD:
             pct_txt = self._font_sm.render(f"{int(pct * 100)}%", True, WHITE)
             self.screen.blit(pct_txt, (bx + bw // 2 - pct_txt.get_width() // 2, by2 + 4))
 
-        # ── Floor / gold top-right ────────────────────────────────────────────
+        # __ Floor / gold top-right ____________________________________________
         info_bg = pygame.Surface((180, 22), pygame.SRCALPHA)
         info_bg.fill((8, 6, 18, 180))
         self.screen.blit(info_bg, (sw - 182, 6))
@@ -202,23 +202,23 @@ class HUD:
             f"Floor {p.stats.floors}    Gold: {p.stats.gold}", True, GOLD)
         self.screen.blit(info, (sw - info.get_width() - 14, 8))
 
-        # ── Minimap ───────────────────────────────────────────────────────────
+        # __ Minimap ___________________________________________________________
         if self._world:
             self._draw_minimap(sw)
 
-        # ── Notifications ─────────────────────────────────────────────────────
+        # __ Notifications _____________________________________________________
         ny = sh // 2 - 130
         for n in reversed(self._notifications[-5:]):
             n.draw(self.screen, ny)
             ny -= 22
 
-        # ── Controls hint ─────────────────────────────────────────────────────
+        # __ Controls hint _____________________________________________________
         hint = self._font_sm.render(
             "WASD: Move   Space: Dodge   LMB: Attack   RMB: Ranged   "
             "Z/X/C/V: Spells   E: Interact   I/M/Q: Menus", True, (55, 50, 75))
         self.screen.blit(hint, (sw // 2 - hint.get_width() // 2, sh - 10))
 
-    # ── Spell slots ───────────────────────────────────────────────────────────
+    # __ Spell slots ___________________________________________________________
     def _draw_spell_slots(self, sw: int, sh: int) -> None:
         if not self._world:
             return
@@ -283,7 +283,7 @@ class HUD:
             kt = self._font_sm.render(KEY_LABELS[i], True, (80, 72, 110))
             self.screen.blit(kt, (sx + 3, sy + 3))
 
-    # ── Hotbar ────────────────────────────────────────────────────────────────
+    # __ Hotbar ________________________________________________________________
     def _draw_hotbar(self, sw: int, sh: int) -> None:
         slot_w  = 52
         slot_h  = 52
@@ -314,7 +314,7 @@ class HUD:
             kn = self._font_sm.render(str(i + 1), True, (80, 72, 110))
             self.screen.blit(kn, (sx + 3, hy + 3))
 
-    # ── Minimap ───────────────────────────────────────────────────────────────
+    # __ Minimap _______________________________________________________________
     def _draw_minimap(self, sw: int) -> None:
         w    = self._world
         ms   = self.MINIMAP_SIZE

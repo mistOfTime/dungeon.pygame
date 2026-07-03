@@ -7,7 +7,7 @@ import random
 from src.core.constants import *
 
 
-# ── Button ────────────────────────────────────────────────────────────────────
+# __ Button ____________________________________________________________________
 class Button:
     def __init__(self, x, y, w, h, text, font,
                  colour=(28, 22, 45), hover_colour=(55, 42, 88),
@@ -63,7 +63,7 @@ class Button:
         surface.blit(txt, txt.get_rect(center=r.center))
 
 
-# ── Background renderer ───────────────────────────────────────────────────────
+# __ Background renderer _______________________________________________________
 class MenuBackground:
     """
     Draws a full cinematic dungeon background:
@@ -126,7 +126,7 @@ class MenuBackground:
             alpha = int(y / (sh // 3) * 40)
             pygame.draw.line(s, (2 + alpha//8, 1 + alpha//10, 4 + alpha//6), (0, y), (sw, y))
 
-        # ── Back wall (upper 55% of screen) ──────────────────────────────────
+        # __ Back wall (upper 55% of screen) __________________________________
         wall_bottom = int(sh * 0.58)
         TILE = 36
         cols = sw // TILE + 2
@@ -157,7 +157,7 @@ class MenuBackground:
                     my = y + rng.randint(1, TILE // 2 - 4)
                     pygame.draw.ellipse(s, (30, 55, 28), (mx, my, 6, 3))
 
-        # ── Floor (lower 42% of screen) ───────────────────────────────────────
+        # __ Floor (lower 42% of screen) _______________________________________
         FT = 40   # floor tile size
         floor_top = wall_bottom
         frows = (sh - floor_top) // FT + 2
@@ -191,18 +191,18 @@ class MenuBackground:
                                      (cx, cy),
                                      (cx + rng.randint(-5, 5), cy + rng.randint(-5, 5)), 1)
 
-        # ── Floor/wall join: deep shadow strip ───────────────────────────────
+        # __ Floor/wall join: deep shadow strip _______________________________
         join = pygame.Surface((sw, 10), pygame.SRCALPHA)
         for i in range(10):
             pygame.draw.line(join, (0, 0, 0, 80 - i * 7), (0, i), (sw, i))
         s.blit(join, (0, wall_bottom - 4))
 
-        # ── Left pillar ───────────────────────────────────────────────────────
+        # __ Left pillar _______________________________________________________
         self._draw_pillar(s, int(sw * 0.12), wall_bottom, 44, sh - wall_bottom + 4)
-        # ── Right pillar ──────────────────────────────────────────────────────
+        # __ Right pillar ______________________________________________________
         self._draw_pillar(s, int(sw * 0.78), wall_bottom, 44, sh - wall_bottom + 4)
 
-        # ── Central archway ───────────────────────────────────────────────────
+        # __ Central archway ___________________________________________________
         self._draw_arch(s, sw // 2, wall_bottom)
 
     def _draw_pillar(self, s, x, y, w, h) -> None:
@@ -294,7 +294,7 @@ class MenuBackground:
         # 1. Static stone
         surface.blit(self._stone_surf, (0, 0))
 
-        # 2. Torch glow — subtle, small, warm
+        # 2. Torch glow _ subtle, small, warm
         flicker_l = 0.88 + 0.12 * math.sin(t * 7.3 + 0.1)
         flicker_r = 0.88 + 0.12 * math.sin(t * 6.8 + 1.2)
         torch_lx  = int(sw * 0.22)
@@ -308,7 +308,7 @@ class MenuBackground:
         self._draw_torch_sprite(surface, torch_lx, torch_y, t)
         self._draw_torch_sprite(surface, torch_rx, torch_y, t + 0.5)
 
-        # 4. Archway inner glow — very faint, deep inside arch only
+        # 4. Archway inner glow _ very faint, deep inside arch only
         glow_alpha = int(8 + 6 * math.sin(t * 1.4))
         arch_glow  = pygame.Surface((100, 140), pygame.SRCALPHA)
         for r in range(50, 0, -5):
@@ -318,7 +318,7 @@ class MenuBackground:
         surface.blit(arch_glow, (sw // 2 - 50, wall_bottom - 200),
                      special_flags=pygame.BLEND_RGBA_ADD)
 
-        # 5. Dust particles — very small and faint
+        # 5. Dust particles _ very small and faint
         for d in self._dust:
             ratio = d["life"] / d["max_life"]
             alpha = int(clamp(ratio, 0, 1) * 55)
@@ -352,13 +352,13 @@ class MenuBackground:
             surface.blit(side_fog, (side_x, 0))
 
     def _draw_torch_glow(self, surface, cx, cy, flicker) -> None:
-        """Subtle warm glow — just a soft halo on the wall/floor nearby."""
+        """Subtle warm glow _ just a soft halo on the wall/floor nearby."""
         radius = 70   # much smaller than before
         r = int(radius * flicker)
         glow = pygame.Surface((r * 2 + 4, r * 2 + 4), pygame.SRCALPHA)
         for i in range(r, 0, -4):
             frac  = i / r
-            # Very low alpha — just tints the stone warm
+            # Very low alpha _ just tints the stone warm
             alpha = int(18 * (1 - frac) * flicker)
             col   = (int(255 * flicker), int(140 * frac * flicker), 20, alpha)
             pygame.draw.ellipse(glow, col,
@@ -390,7 +390,7 @@ def clamp(v, lo, hi):
     return max(lo, min(hi, v))
 
 
-# ── Main Menu ─────────────────────────────────────────────────────────────────
+# __ Main Menu _________________________________________________________________
 class MainMenu:
     def __init__(self, screen: pygame.Surface, assets, bus) -> None:
         self.screen  = screen
@@ -410,7 +410,7 @@ class MainMenu:
         # Background
         self._bg = MenuBackground(sw, sh)
 
-        # Button layout — right side panel
+        # Button layout _ right side panel
         bw, bh  = 220, 42
         bx      = sw - bw - 60
         by_start= sh // 2 - 40
@@ -456,7 +456,7 @@ class MainMenu:
         # Background
         self._bg.draw(self.screen)
 
-        # ── Right-side semi-transparent panel ────────────────────────────────
+        # __ Right-side semi-transparent panel ________________________________
         panel_w = 310
         panel_h = len(self._buttons) * 52 + 80
         panel_x = sw - panel_w - 40
@@ -468,19 +468,19 @@ class MainMenu:
         pygame.draw.line(panel, (120, 80, 200, 180), (20, 0), (panel_w - 20, 0), 2)
         self.screen.blit(panel, (panel_x, panel_y))
 
-        # ── Buttons ───────────────────────────────────────────────────────────
+        # __ Buttons ___________________________________________________________
         for btn in self._buttons:
             btn.draw(self.screen)
 
-        # ── Title (left side over dungeon bg) ────────────────────────────────
+        # __ Title (left side over dungeon bg) ________________________________
         title_cx = int(sw * 0.32)
         title_cy = int(sh * 0.26 + self._title_y_offset)
 
         # Render title first to know its size
         title_surf = self._font_title.render("ECLIPSE DEPTHS", True, (220, 185, 255))
-        sub_surf   = self._font_sub.render("A Roguelike Dungeon Crawler  ·  by mistOfTime",
+        sub_surf   = self._font_sub.render("A Roguelike Dungeon Crawler  _  by mistOfTime",
                                             True, (170, 155, 210))
-        tag_surf   = self._font_small.render("The darkness hungers. Will you descend?",
+        tag_surf   = self._font_small.render("The darkness hungers. Will you descend_",
                                               True, (120, 105, 160))
 
         # Dark backing panel behind all title text
@@ -523,11 +523,11 @@ class MainMenu:
                      (title_cx - tag_surf.get_width()//2,
                       line_y + sub_surf.get_height() + 14))
 
-        # ── Version bottom-right ──────────────────────────────────────────────
+        # __ Version bottom-right ______________________________________________
         ver = self._font_small.render("v1.0.0", True, (50, 42, 72))
         self.screen.blit(ver, (sw - ver.get_width() - 10, sh - 16))
 
-        # ── Fade-in overlay ───────────────────────────────────────────────────
+        # __ Fade-in overlay ___________________________________________________
         if self._fade_in > 0:
             alpha = int((self._fade_in / 1.5) * 255)
             fade  = pygame.Surface((sw, sh))

@@ -22,7 +22,7 @@ class Inventory:
         self._hotbar:    list[Item | None]        = [None] * HOTBAR_SIZE
         self._equipment: dict[str, Item | None]   = {s: None for s in EQUIPMENT_SLOTS}
 
-    # ── Core add/remove ──────────────────────────────────────────────────────
+    # __ Core add/remove ______________________________________________________
     def add_item(self, item: Item) -> bool:
         """Returns True if the item was added successfully.
         Consumables are also auto-assigned to the first free hotbar slot."""
@@ -88,7 +88,7 @@ class Inventory:
         items.sort(key=lambda i: (i.item_type, i.rarity, i.name))
         self._slots = items + [None] * (INVENTORY_SIZE - len(items))
 
-    # ── Equipment ────────────────────────────────────────────────────────────
+    # __ Equipment ____________________________________________________________
     def equip(self, inv_index: int) -> bool:
         item = self._slots[inv_index]
         if not item:
@@ -119,7 +119,7 @@ class Inventory:
             return item.subtype
         return None
 
-    # ── Hotbar ───────────────────────────────────────────────────────────────
+    # __ Hotbar _______________________________________________________________
     def set_hotbar(self, hotbar_idx: int, inv_index: int) -> None:
         if 0 <= hotbar_idx < HOTBAR_SIZE and 0 <= inv_index < INVENTORY_SIZE:
             self._hotbar[hotbar_idx] = self._slots[inv_index]
@@ -146,7 +146,7 @@ class Inventory:
     def count_item(self, item_id: str) -> int:
         return sum(s.stack_size for s in self._slots if s and s.id == item_id)
 
-    # ── Stats aggregation ────────────────────────────────────────────────────
+    # __ Stats aggregation ____________________________________________________
     def total_stats(self):
         from src.items.item_data import ItemStats
         total = ItemStats()
@@ -166,7 +166,7 @@ class Inventory:
                 total.mana_regen   += s.mana_regen
         return total
 
-    # ── Serialisation ────────────────────────────────────────────────────────
+    # __ Serialisation ________________________________________________________
     def to_dict(self) -> dict:
         def serial(item):
             if item is None:

@@ -108,7 +108,7 @@ class InventoryScreen:
         self._inv_grid_h    = inv_grid_h
         self._layout_done   = True
 
-    # ── Slot rect helpers ─────────────────────────────────────────────────────
+    # __ Slot rect helpers _____________________________________________________
     def _inv_slot_rect(self, col: int, row: int) -> pygame.Rect:
         ox, oy = self._inv_origin
         return pygame.Rect(ox + col * (SLOT_SIZE + SLOT_PAD) + SLOT_PAD,
@@ -144,7 +144,7 @@ class InventoryScreen:
                 return i
         return None
 
-    # ── Events ────────────────────────────────────────────────────────────────
+    # __ Events ________________________________________________________________
     def handle_event(self, event: pygame.Event) -> None:
         if event.type == pygame.KEYDOWN and event.key in (pygame.K_ESCAPE, pygame.K_i):
             self.bus.publish("close_inventory")
@@ -253,12 +253,12 @@ class InventoryScreen:
         if not self._layout_done:
             return
         inv = self.player.inventory
-        # Right-click on equip slot → unequip
+        # Right-click on equip slot _ unequip
         slot_name = self._pos_to_equip_slot(pos)
         if slot_name and inv.equipment.get(slot_name):
             inv.unequip(slot_name)
             return
-        # Right-click on inventory slot → auto-equip
+        # Right-click on inventory slot _ auto-equip
         idx = self._pos_to_inv_slot(pos)
         if idx is not None and inv.slots[idx]:
             item = inv.slots[idx]
@@ -282,7 +282,7 @@ class InventoryScreen:
         if not self._layout_done and self.player:
             self._compute_layout()
 
-    # ── Draw ─────────────────────────────────────────────────────────────────
+    # __ Draw _________________________________________________________________
     def draw(self) -> None:
         if not self.player:
             return
@@ -307,7 +307,7 @@ class InventoryScreen:
         self.screen.blit(title, (self._panel_rect.x + 14,
                                   self._panel_rect.y + 10))
         # Close hint
-        close_txt = self._font_sm.render("I / Esc  –  Close", True, (80, 70, 110))
+        close_txt = self._font_sm.render("I / Esc  _  Close", True, (80, 70, 110))
         self.screen.blit(close_txt, (self._panel_rect.right - close_txt.get_width() - 14,
                                       self._panel_rect.y + 14))
 
@@ -399,7 +399,7 @@ class InventoryScreen:
         inv    = self.player.inventory
         mx, my = pygame.mouse.get_pos()
         ox, oy = self._hotbar_origin
-        lbl    = self._font_sm.render("Hotbar  (1–4):", True, EQUIP_LABEL_COL)
+        lbl    = self._font_sm.render("Hotbar  (1_4):", True, EQUIP_LABEL_COL)
         self.screen.blit(lbl, (ox + SLOT_PAD, oy - 2))
         for i in range(HOTBAR_SIZE):
             rect  = self._hotbar_slot_rect(i)

@@ -37,7 +37,7 @@ class LootDrop(pygame.sprite.Sprite):
         self._float_offset = math.sin(self._age * 3.0) * 3.0
         self.rect.centery = int(self._base_y + self._float_offset)
 
-    # ── Factory methods ──────────────────────────────────────────────────────
+    # __ Factory methods ______________________________________________________
     @classmethod
     def gold(cls, x, y, amount: int) -> "LootDrop":
         drop = cls(x, y, gold=amount)

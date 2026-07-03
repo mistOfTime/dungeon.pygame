@@ -18,14 +18,14 @@ class AssetManager:
         self._sounds:  dict[str, pygame.mixer.Sound] = {}
         self._preload()
 
-    # ── Preload ───────────────────────────────────────────────────────────────
+    # __ Preload _______________________________________________________________
     def _preload(self) -> None:
         """Load any bundled assets that exist on disk."""
-        # Fonts – try to load a pixel font; fall back to system default
+        # Fonts _ try to load a pixel font; fall back to system default
         font_path = os.path.join(self.ASSET_ROOT, "fonts", "pixel.ttf")
         self._default_font_path = font_path if os.path.exists(font_path) else None
 
-    # ── Images ────────────────────────────────────────────────────────────────
+    # __ Images ________________________________________________________________
     def image(self, key: str, fallback_size=(TILE_SIZE, TILE_SIZE),
               fallback_colour=(200, 200, 200)) -> pygame.Surface:
         if key in self._images:
@@ -61,7 +61,7 @@ class AssetManager:
         self._images[full_key] = surf
         return surf
 
-    # ── Fonts ─────────────────────────────────────────────────────────────────
+    # __ Fonts _________________________________________________________________
     def font(self, size: int = 16, bold: bool = False) -> pygame.font.Font:
         key = (size, bold)
         if key not in self._fonts:
@@ -74,7 +74,7 @@ class AssetManager:
             self._fonts[key] = pygame.font.SysFont("consolas" if not bold else "consolas", size, bold=bold)
         return self._fonts[key]
 
-    # ── Sounds ────────────────────────────────────────────────────────────────
+    # __ Sounds ________________________________________________________________
     def sound(self, key: str) -> pygame.mixer.Sound | None:
         if key in self._sounds:
             return self._sounds[key]
@@ -89,7 +89,7 @@ class AssetManager:
                     pass
         return None  # silent fallback
 
-    # ── Placeholders ─────────────────────────────────────────────────────────
+    # __ Placeholders _________________________________________________________
     @staticmethod
     def _make_placeholder(size: tuple, colour: tuple, label: str = "") -> pygame.Surface:
         surf = pygame.Surface(size, pygame.SRCALPHA)
@@ -108,7 +108,7 @@ class AssetManager:
         pygame.draw.rect(surf, (0, 0, 0), surf.get_rect(), 1)
         return surf
 
-    # ── Sprite sheets ─────────────────────────────────────────────────────────
+    # __ Sprite sheets _________________________________________________________
     def sprite_sheet(self, key: str, frame_w: int, frame_h: int) -> list[pygame.Surface]:
         """Slice a sprite sheet into frames."""
         sheet = self.image(key, (frame_w, frame_h))
