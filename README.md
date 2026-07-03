@@ -1,5 +1,10 @@
 # 🌑 Eclipse Depths
 
+[![Build & Release](https://github.com/mistOfTime/dungeon.pygame/actions/workflows/build-release.yml/badge.svg)](https://github.com/mistOfTime/dungeon.pygame/actions/workflows/build-release.yml)
+[![Latest Release](https://img.shields.io/github/v/release/mistOfTime/dungeon.pygame?label=download)](https://github.com/mistOfTime/dungeon.pygame/releases/latest)
+[![Python](https://img.shields.io/badge/python-3.13%2B-blue)](https://python.org)
+[![pygame-ce](https://img.shields.io/badge/pygame--ce-2.5%2B-green)](https://pyga.me)
+
 > **This is my first Pygame project** — a fully hand-crafted 2D roguelike dungeon crawler built entirely in Python. No game engine, no tilemap editor, no pre-made assets. Everything you see — the stone walls, the flickering torches, the animated enemies, the procedural dungeons — is drawn in code from scratch.
 
 ---
@@ -74,6 +79,11 @@ eclipse_depths/
 ---
 
 ## 🚀 Getting Started
+
+### ⬇️ Download & Play (No Python needed)
+Go to the [**Releases page**](https://github.com/mistOfTime/dungeon.pygame/releases/latest), download `EclipseDepths-Windows.zip`, extract it, and double-click `EclipseDepths.exe`.
+
+### 🛠 Run from Source
 
 ### Requirements
 - Python 3.13+

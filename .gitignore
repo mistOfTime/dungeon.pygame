@@ -13,6 +13,7 @@ saves/
 
 # PyInstaller
 dist/
+build/
 *.exe
 
 # IDE

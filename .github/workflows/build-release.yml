@@ -1,0 +1,80 @@
+name: Build & Release EclipseDepths.exe
+
+on:
+  push:
+    tags:
+      - 'v*'          # Triggers on version tags like v1.0.0, v1.1.0
+  workflow_dispatch:   # Allow manual trigger from GitHub Actions tab
+
+jobs:
+  build-windows:
+    name: Build Windows EXE
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pygame-ce>=2.4.0 pytweening>=1.2.0 pyinstaller>=6.0.0
+
+      - name: Build EXE with PyInstaller
+        run: pyinstaller eclipse_depths.spec --clean
+
+      - name: Verify build
+        run: |
+          $size = (Get-Item "dist\EclipseDepths.exe").Length / 1MB
+          Write-Host "EXE size: $([math]::Round($size, 1)) MB"
+          if ($size -lt 5) { throw "EXE too small — build may have failed" }
+
+      - name: Zip the executable
+        run: |
+          Compress-Archive -Path "dist\EclipseDepths.exe" -DestinationPath "dist\EclipseDepths-Windows.zip"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: EclipseDepths-Windows
+          path: dist\EclipseDepths-Windows.zip
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Eclipse Depths ${{ github.ref_name }}"
+          tag_name: ${{ github.ref_name }}
+          body: |
+            ## 🌑 Eclipse Depths ${{ github.ref_name }}
+
+            ### How to play
+            1. Download `EclipseDepths-Windows.zip` below
+            2. Extract anywhere
+            3. Double-click `EclipseDepths.exe`
+            4. No Python install needed!
+
+            ### Controls
+            | Key | Action |
+            |-----|--------|
+            | WASD | Move |
+            | Left Click | Melee attack |
+            | Right Click | Ranged attack |
+            | Space | Dodge roll |
+            | Z/X/C/V | Spells |
+            | E | Interact / Descend |
+            | I / M / Q | Inventory / Map / Quests |
+
+            ---
+            *Built automatically from source by GitHub Actions.*
+          files: dist\EclipseDepths-Windows.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
