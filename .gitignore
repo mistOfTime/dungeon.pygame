@@ -11,7 +11,7 @@ build/
 # Saves & user data
 saves/
 
-# PyInstaller
+# PyInstaller outputs (keep .spec tracked for CI)
 dist/
 build/
 *.exe
