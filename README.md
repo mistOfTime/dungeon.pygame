@@ -117,10 +117,6 @@ pytweening>=1.2.0
 
 ---
 
-## 📸 Screenshots
-
-> *Coming soon — drop PNGs in this section after capturing gameplay.*
-
 ---
 
 ## 🗺 Roadmap
